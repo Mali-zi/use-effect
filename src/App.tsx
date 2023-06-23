@@ -4,6 +4,7 @@ import { User } from './models/index';
 import { UserDetails } from './models/index';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import List from './components/List';
+import Details from './components/Details';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,18 +12,19 @@ import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 
 function App() {
-  const initialDetails = {
-    id: 0,
-    name: "",
-    avatar: "",
+  const initialInfo: UserDetails = {
+    id: 1,
+    name: "Dorthy McClure Sr.",
+    avatar: "https://i.pravatar.cc/302",
     details: {
-        city: "",
-        company: "",
-        position: "",
+        city: "Sipesfort",
+        company: "Hilll LLC",
+        position: "Regional Identity Supervisor",
     }
   };
-  const [details, setDetails] = useState<UserDetails>(initialDetails);
+  const [info, setInfo] = useState<UserDetails>(initialInfo);
   const [list, setList] = useState<User[]>([]);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get(`https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hooks-context/use-effect/data/users.json`)
@@ -31,21 +33,33 @@ function App() {
         })
   }, []);
 
+  useEffect(() => {
+    if (isLoading) {
+      
+    }
+  }, [isLoading]);
+
   return (
     <div className="App">
-      <Container>
+      <div className='container'>
       <Row className="align-items-start justify-content-center">
         <Col>
           <List
             list={list}
-            details={details}
-            setDetails={setDetails}
+            info={info}
+            setInfo={setInfo}
+            isLoading={isLoading}
+            setLoading={setLoading}
           />
         </Col>
         <Col>
+          <Details
+            info={info}
+            setInfo={setInfo}
+          />
         </Col>
       </Row>
-      </Container>
+      </div>
     </div>
   );
 }

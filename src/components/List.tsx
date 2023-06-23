@@ -1,26 +1,23 @@
-import { User, ListProps } from '../models/index';
+import { ListProps } from '../models/index';
 import axios from 'axios';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from 'react';
-
+import { inherits } from 'util';
 
 /** 
  * Компонент CreatePosts выводит сообщения, введенные пользователем.
  * В качестве props принимает переменные состояния: posts и setPosts.
  */
-export default function List({list, details, setDetails}: ListProps): React.ReactElement{
-  function getDetails(id: number): void {
-    const [isLoading, setLoading] = useState(true);
-  
-    useEffect(() => {
-        axios.get(`https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hooks-context/use-effect/data/${id}.json`)
-        .then((response) => {
-          setDetails(response.data);
-          setLoading(false);
-        }
-      );
-    }, [isLoading]);
+export default function List({list, setInfo, isLoading, setLoading}: ListProps): React.ReactElement{
+
+  function GetDetails(id: number): void {
+    axios.get(`https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hooks-context/use-effect/data/${id}.json`)
+      .then((response) => {
+        const jdata = JSON.stringify(response.data);
+        setInfo(JSON.parse(jdata));
+        setLoading(false);
+      }
+    );
+  }; 
   
     let newList: JSX.Element[] = [<></>];
     newList = list.map(item => {
@@ -29,19 +26,23 @@ export default function List({list, details, setDetails}: ListProps): React.Reac
           key={item.id}
           as="li" 
           variant="outline-primary"
-          size="lg"
+          className="list-group-item"
+          style={{borderRadius: 0}}
           disabled={isLoading}
-          onClick={() => getDetails(item.id)}
+          onClick={() => GetDetails(item.id)}
         >
           {item.name}
         </Button>
       )
     });
-  };
 
   return (
-    <ul className="btn-group-vertical" role="group" aria-label="Vertical button group">
-      {newList}
-    </ul>
+        <ul 
+          className="list-group list-group-flush border border-secondary-subtle" 
+          style={{width: "18rem", borderRadius: 0}}
+        >
+          {newList}
+        </ul>
+
   )
 }
