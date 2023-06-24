@@ -3,43 +3,69 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { UserDetails } from '../models/index';
 
 /** 
- * Компонент InputForm отрисовывает форму для ввода названия города и смещения 
- * в часах относительно Гринвича. По нажатию кнопки часы с соответствующими данными 
- * отображаются на экране.
+ * Компонент Details отрисовывает детальную информацию о пользователе, 
+ * принимает id пользователя в props.
  */
-export default function Details({id, setLoading, info, setInfo}: DetailsProps): React.ReactElement {
+export default function Details({id}: DetailsProps): React.ReactElement {
+  const initialInfo: UserDetails = {
+    id: 0,
+    name: "",
+    avatar: "",
+    details: {
+        city: "",
+        company: "",
+        position: "",
+    }
+  };
+  const [info, setInfo] = useState<UserDetails>(initialInfo);
+  const [isLoading, setIsLoding] = useState(true);
+
+  const userCard = () => {
+    if (id === 0) {
+      return <></>
+    } else {
+      if (isLoading) {
+        return <h4 className='loading'>Loading...</h4>
+      } else {
+        return (
+          <div>
+            <Card style={{ width: '18rem' }}>
+              <Card.Img variant="top" src={info.avatar} />
+              <Card.Body>
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <Card.Title>{info.name}</Card.Title>
+                  </ListGroup.Item>
+                  <ListGroup.Item>City: {info.details.city}</ListGroup.Item>
+                  <ListGroup.Item>Company: {info.details.company}</ListGroup.Item>
+                  <ListGroup.Item>Position: {info.details.position}</ListGroup.Item>
+                </ListGroup>
+              </Card.Body>
+            </Card>
+          </div>
+        )
+      }
+    }
+  };
 
   useEffect(() => {
-    axios.get(`https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hooks-context/use-effect/data/${id}.json`)
+    const controller = new AbortController();
+    if (id !== 0) {
+      axios.get(`https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hooks-context/use-effect/data/${id}.json`, {
+        signal: controller.signal
+      })
       .then((response) => {
-        const jdata = JSON.stringify(response.data);
-        setInfo(JSON.parse(jdata));
-        // setLoading(true);
-      }
-    );
-  }, [id, setInfo]);
+        setInfo(response.data);
+        setIsLoding(false);
+      })
+    };
+    return () => {
+      controller.abort()
+    };
+  }, [id]);
 
-  
-
-
-  return (
-    <div>
-      <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src={info.avatar} />
-        <Card.Body>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <Card.Title>{info.name}</Card.Title>
-            </ListGroup.Item>
-            <ListGroup.Item>City: {info.details.city}</ListGroup.Item>
-            <ListGroup.Item>Company: {info.details.company}</ListGroup.Item>
-            <ListGroup.Item>Position: {info.details.position}</ListGroup.Item>
-          </ListGroup>
-        </Card.Body>
-      </Card>
-    </div>
-  )
+  return userCard()
 }
