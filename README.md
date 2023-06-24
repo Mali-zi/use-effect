@@ -18,5 +18,5 @@
 
 Сделан тест с помощью выставления ограничения пропускной способности сети в Dev Tools.
 
-
+<img width="900" alt="use-effect-screenshot" src="https://github.com/Mali-zi/use-effect/blob/master/img/use-effect-screenshot.PNG">
 
