@@ -5,7 +5,6 @@ import { UserDetails } from './models/index';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import List from './components/List';
 import Details from './components/Details';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -23,21 +22,8 @@ function App() {
     }
   };
   const [info, setInfo] = useState<UserDetails>(initialInfo);
-  const [list, setList] = useState<User[]>([]);
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios.get(`https://raw.githubusercontent.com/netology-code/ra16-homeworks/master/hooks-context/use-effect/data/users.json`)
-        .then((response) => {
-          setList(response.data);
-        })
-  }, []);
-
-  useEffect(() => {
-    if (isLoading) {
-      
-    }
-  }, [isLoading]);
+  const [isLoading, setLoading] = useState(false);
+  const [id, setId] = useState<number>(0);
 
   return (
     <div className="App">
@@ -45,18 +31,18 @@ function App() {
       <Row className="align-items-start justify-content-center">
         <Col>
           <List
-            list={list}
-            info={info}
-            setInfo={setInfo}
-            isLoading={isLoading}
-            setLoading={setLoading}
+            setId={setId}
           />
         </Col>
         <Col>
-          <Details
+        {id ? 
+          <Details 
+            id={id} 
+            setLoading={setLoading}
             info={info}
             setInfo={setInfo}
-          />
+          /> 
+          : <>Choose a person</>}
         </Col>
       </Row>
       </div>

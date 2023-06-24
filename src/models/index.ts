@@ -15,15 +15,17 @@ export interface UserDetails {
 }
 
 export interface ListProps {
-  list: User[], 
-  info: UserDetails, 
-  isLoading: boolean, 
-  setLoading: (val: boolean) => void, 
-  setInfo: (val: UserDetails) => void, 
+  // list: User[], 
+  // info: UserDetails, 
+  // isLoading: boolean, 
+  // setLoading: (val: boolean) => void, 
+  setId: (val: number) => void, 
 }
 
 export interface DetailsProps {
-  info: UserDetails,
+  id: number,
+  setLoading: (val: boolean) => void, 
+  info: UserDetails, 
   setInfo: (val: UserDetails) => void, 
 }
 
