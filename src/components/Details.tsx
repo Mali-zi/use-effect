@@ -33,7 +33,7 @@ export default function Details({id}: DetailsProps): React.ReactElement {
         return (
           <div>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src={info.avatar} />
+              <Card.Img variant="top" src={info.avatar + id} />
               <Card.Body>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
